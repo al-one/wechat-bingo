@@ -42,12 +42,13 @@ class App(Plugin):
         pass
 
     def reply(self, event: Event):
-        query = event.message.content
+        content = event.message.content
+        query = event.context.query if event.context else content
         start_with_command = self.config_for(event, 'start_with_command')
         for cmd in self.commands:
             if start_with_command and not query.startswith(cmd):
                 continue
-            if cmd not in query:
+            if cmd not in content:
                 continue
             if not (reply := self.generate_reply(event)):
                 continue
